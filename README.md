@@ -15,7 +15,7 @@ This project uses `XO` for linting. Install the [plugin of your editor](https://
 Only `input` of type string is accepted. Output is always the result of `BigNumber#toString(10)`.
 
 ```js
-import zBigNumber from 'zod-bignumber';
+import { zBigNumber } from 'zod-bignumber';
 
 zBigNumber().safeParse('2.91');
 // { success: true, data: '2.91' }
@@ -39,7 +39,7 @@ Default value: `false`
 Coerce input value to a string.
 
 ```js
-import zBigNumber from 'zod-bignumber';
+import { zBigNumber } from 'zod-bignumber';
 
 zBigNumber({ coerce: true }).safeParse(2.2222222222222224e+54);
 // { success: true, data: '22222222222222222000000000000000000000000000000000000' }
@@ -52,7 +52,7 @@ Default value: `10`
 Allows setting the base used when calling `toString(base)`.
 
 ```js
-import zBigNumber from 'zod-bignumber';
+import { zBigNumber } from 'zod-bignumber';
 
 zBigNumber({ base: 2 }).safeParse(2);
 // { success: true, data: '10' }
@@ -61,7 +61,7 @@ zBigNumber({ base: 2 }).safeParse(2);
 You can pass `null` to not format the number:
 
 ```js
-import zBigNumber from 'zod-bignumber';
+import { zBigNumber } from 'zod-bignumber';
 
 zBigNumber({ base: null }).safeParse('2.2222222222222224e+54');
 // { success: true, data: '2.2222222222222224e+54' }
