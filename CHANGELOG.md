@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/satazor/zod-bignumber/compare/v1.0.2...v1.0.3) (2023-03-19)
+
+
+### Bug Fixes
+
+* readme examples ([f63c31c](https://github.com/satazor/zod-bignumber/commit/f63c31c2aa91044e0efd1c0e5942ea4f85a24192))
+
 ## [1.0.2](https://github.com/satazor/zod-bignumber/compare/v1.0.1...v1.0.2) (2023-03-19)
 
 
