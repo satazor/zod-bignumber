@@ -1,6 +1,6 @@
 # zod-bignumber
 
-BigNumber type for [Zod](https://zod.dev/).
+BigNumber type for [`Zod`](https://zod.dev/).
 
 ## Installation
 
