@@ -1,6 +1,6 @@
 # zod-bignumber
 
-BigNumber type for Zod.
+BigNumber type for [Zod](https://zod.dev/).
 
 ## Installation
 
@@ -8,7 +8,7 @@ BigNumber type for Zod.
 npm install zod-bignumber
 ```
 
-This project uses `XO` for linting. Install the [plugin of your editor](https://github.com/xojs/xo#editor-plugins) for improved developer experience.
+This project uses [`XO`](https://github.com/xojs/xo) for linting. Install the [plugin of your editor](https://github.com/xojs/xo#editor-plugins) for improved developer experience.
 
 ## Usage
 
