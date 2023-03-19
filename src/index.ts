@@ -54,9 +54,30 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       return z.INVALID;
     }
 
+    let bigNumber;
+
     // Check if data is an invalid big number.
     // Please note that `Infinity` is still valid at this point and `finite()` should be used.
-    const bigNumber = new BigNumber(input.data);
+    // Moreover, the code below will throw on invalid numbers if `BigNumber.DEBUG` is true, so we do a try-catch.
+    try {
+      bigNumber = new BigNumber(input.data);
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        error.message.startsWith('[BigNumber Error]')
+      ) {
+        z.addIssueToContext(ctx, {
+          code: z.ZodIssueCode.invalid_type,
+          message: 'Not a valid big number',
+          expected: 'number',
+          received: 'nan',
+        });
+
+        return z.INVALID;
+      }
+
+      throw error;
+    }
 
     if (bigNumber.isNaN()) {
       z.addIssueToContext(ctx, {

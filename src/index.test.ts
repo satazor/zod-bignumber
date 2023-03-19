@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {it, expect, describe} from 'vitest';
+import BigNumber from 'bignumber.js';
+import {it, expect, describe, beforeEach} from 'vitest';
 import {z} from 'zod';
 import {zBigNumber} from '.';
+
+beforeEach(() => {
+  BigNumber.DEBUG = false;
+});
 
 it('should error if input is not a string', () => {
   const result = zBigNumber().safeParse(1);
@@ -42,7 +47,28 @@ it('should error if input is not a valid number', () => {
   `);
 });
 
-it('should work correctly for a valid string', () => {
+it('should error if input is not a valid number (DEBUG enabled)', () => {
+  BigNumber.DEBUG = true;
+
+  const result = zBigNumber().safeParse('aaa');
+
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "error": [ZodError: [
+      {
+        "code": "invalid_type",
+        "message": "Not a valid big number",
+        "expected": "number",
+        "received": "nan",
+        "path": []
+      }
+    ]],
+      "success": false,
+    }
+  `);
+});
+
+it('should work correctly for a valid number', () => {
   const result = zBigNumber().safeParse('2.91');
 
   expect(result).toMatchInlineSnapshot(`
@@ -53,7 +79,20 @@ it('should work correctly for a valid string', () => {
   `);
 });
 
-it('should work correctly for a exponentiated number as a string', () => {
+it('should work correctly for a valid number (DEBUG enabled)', () => {
+  BigNumber.DEBUG = true;
+
+  const result = zBigNumber().safeParse('2.91');
+
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "data": "2.91",
+      "success": true,
+    }
+  `);
+});
+
+it('should work correctly for a exponentiated number', () => {
   const result = zBigNumber().safeParse('2.2222222222222222e+52');
 
   expect(result).toMatchInlineSnapshot(`
