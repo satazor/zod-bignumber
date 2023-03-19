@@ -58,7 +58,7 @@ zBigNumber({ base: 2 }).safeParse(2);
 // { success: true, data: '10' }
 ```
 
-You can use `null` to not format the number:
+You can pass `null` to not format the number:
 
 ```js
 import zBigNumber from 'zod-bignumber';
@@ -66,8 +66,6 @@ import zBigNumber from 'zod-bignumber';
 zBigNumber({ base: null }).safeParse('2.2222222222222224e+54');
 // { success: true, data: '2.2222222222222224e+54' }
 ```
-
-You can use `null` to not format the number.
 
 ## License
 
