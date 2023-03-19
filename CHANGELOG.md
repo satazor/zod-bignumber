@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/satazor/zod-bignumber/compare/v1.0.3...v1.0.4) (2023-03-19)
+
+
+### Bug Fixes
+
+* not working when DEBUG is enabled ([6f23109](https://github.com/satazor/zod-bignumber/commit/6f231096cb83f1d664ff30b15f1a75d3e246f0f3))
+
 ## [1.0.3](https://github.com/satazor/zod-bignumber/compare/v1.0.2...v1.0.3) (2023-03-19)
 
 
