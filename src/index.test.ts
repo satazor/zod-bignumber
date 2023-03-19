@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {it, expect, describe} from 'vitest';
-import {type SafeParseReturnType, z, ZodNaN} from 'zod';
-import {type ZodBigNumberOutput, type ZodBigNumber, zBigNumber} from '.';
+import {z} from 'zod';
+import {zBigNumber} from '.';
 
 it('should error if input is not a string', () => {
-  const result: SafeParseReturnType<ZodBigNumberOutput> =
-    zBigNumber().safeParse(1);
+  const result = zBigNumber().safeParse(1);
 
   expect(result).toMatchInlineSnapshot(`
     {
@@ -33,6 +32,8 @@ it('should error if input is not a valid number', () => {
       {
         "code": "invalid_type",
         "message": "Not a valid big number",
+        "expected": "number",
+        "received": "nan",
         "path": []
       }
     ]],
@@ -42,8 +43,7 @@ it('should error if input is not a valid number', () => {
 });
 
 it('should work correctly for a valid string', () => {
-  const result: SafeParseReturnType<ZodBigNumberOutput> =
-    zBigNumber().safeParse('2.91');
+  const result = zBigNumber().safeParse('2.91');
 
   expect(result).toMatchInlineSnapshot(`
     {
@@ -82,7 +82,7 @@ describe('gte()', () => {
           "exact": false,
           "inclusive": true,
           "message": "Number must be greater than or equal to 3",
-          "minimum": "3",
+          "minimum": 3,
           "type": "number",
           "path": []
         }
@@ -127,7 +127,7 @@ describe('gt()', () => {
           "exact": false,
           "inclusive": false,
           "message": "Number must be greater than 3",
-          "minimum": "3",
+          "minimum": 3,
           "type": "number",
           "path": []
         }
@@ -148,7 +148,7 @@ describe('gt()', () => {
           "exact": false,
           "inclusive": false,
           "message": "Number must be greater than 3",
-          "minimum": "3",
+          "minimum": 3,
           "type": "number",
           "path": []
         }
@@ -187,7 +187,7 @@ describe('lte()', () => {
           "code": "too_big",
           "exact": false,
           "inclusive": true,
-          "maximum": "2",
+          "maximum": 2,
           "message": "Number must be less than or equal to 2",
           "type": "number",
           "path": []
@@ -232,7 +232,7 @@ describe('lt()', () => {
           "code": "too_big",
           "exact": false,
           "inclusive": false,
-          "maximum": "2",
+          "maximum": 2,
           "message": "Number must be less than 2",
           "type": "number",
           "path": []
@@ -253,7 +253,7 @@ describe('lt()', () => {
           "code": "too_big",
           "exact": false,
           "inclusive": false,
-          "maximum": "3",
+          "maximum": 3,
           "message": "Number must be less than 3",
           "type": "number",
           "path": []

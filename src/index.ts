@@ -1,11 +1,5 @@
 import BigNumber from 'bignumber.js';
-import {
-  INVALID,
-  z,
-  type ParseInput,
-  type ZodTypeDef,
-  type RawCreateParams,
-} from 'zod';
+import {z} from 'zod';
 import {
   messageToString,
   processCreateParameters,
@@ -13,10 +7,10 @@ import {
 } from './utils';
 
 export type ZodBigNumberCheck =
-  | {kind: 'min'; value: BigNumber.Value; inclusive: boolean; message?: string}
-  | {kind: 'max'; value: BigNumber.Value; inclusive: boolean; message?: string}
+  | {kind: 'min'; value: string; inclusive: boolean; message?: string}
+  | {kind: 'max'; value: string; inclusive: boolean; message?: string}
   | {kind: 'int'; message?: string}
-  | {kind: 'multipleOf'; value: BigNumber.Value; message?: string}
+  | {kind: 'multipleOf'; value: string; message?: string}
   | {kind: 'finite'; message?: string};
 
 export type ZodBigNumberDef = {
@@ -24,15 +18,11 @@ export type ZodBigNumberDef = {
   typeName: 'ZodBigNumber';
   coerce: boolean;
   base: number;
-} & ZodTypeDef;
-
-export type ZodBigNumberInput = BigNumber.Value;
-
-export type ZodBigNumberOutput = string | BigNumber.Instance;
+} & z.ZodTypeDef;
 
 export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
   static create = (
-    parameters?: RawCreateParams & {coerce?: boolean; base?: number},
+    parameters?: z.RawCreateParams & {coerce?: boolean; base?: number},
   ): ZodBigNumber =>
     new ZodBigNumber({
       checks: [],
@@ -46,7 +36,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
   max = this.lte;
   step = this.multipleOf;
 
-  _parse(input: ParseInput) {
+  _parse(input: z.ParseInput) {
     const ctx = this._getOrReturnCtx(input);
 
     if (this._def.coerce) {
@@ -61,20 +51,22 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
         received: z.getParsedType(input.data),
       });
 
-      return INVALID;
+      return z.INVALID;
     }
 
     // Check if data is an invalid big number.
     // Please note that `Infinity` is still valid at this point and `finite()` should be used.
-    const bigNumber = new BigNumber(input.data as unknown);
+    const bigNumber = new BigNumber(input.data);
 
     if (bigNumber.isNaN()) {
       z.addIssueToContext(ctx, {
         code: z.ZodIssueCode.invalid_type,
         message: 'Not a valid big number',
+        expected: 'number',
+        received: 'nan',
       });
 
-      return INVALID;
+      return z.INVALID;
     }
 
     // Process checks in order.
@@ -107,7 +99,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
               exact: false,
               inclusive: check.inclusive,
               message: check.message,
-              minimum: check.value,
+              minimum: Number(check.value),
               type: 'number',
             });
             status.dirty();
@@ -126,7 +118,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
               code: z.ZodIssueCode.too_big,
               exact: false,
               inclusive: check.inclusive,
-              maximum: check.value,
+              maximum: Number(check.value),
               message: check.message,
               type: 'number',
             });
@@ -141,7 +133,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
             z.addIssueToContext(ctx, {
               code: z.ZodIssueCode.not_multiple_of,
               message: check.message,
-              multipleOf: check.value,
+              multipleOf: Number(check.value),
             });
             status.dirty();
           }
@@ -177,7 +169,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
     });
   }
 
-  gte(value: BigNumber.Instance, message?: ErrorMessage) {
+  gte(value: string, message?: ErrorMessage) {
     return this._addCheck({
       inclusive: true,
       kind: 'min',
@@ -186,7 +178,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
     });
   }
 
-  gt(value: BigNumber.Instance, message?: ErrorMessage) {
+  gt(value: string, message?: ErrorMessage) {
     return this._addCheck({
       inclusive: false,
       kind: 'min',
@@ -195,7 +187,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
     });
   }
 
-  lte(value: BigNumber.Instance, message?: ErrorMessage) {
+  lte(value: string, message?: ErrorMessage) {
     return this._addCheck({
       inclusive: true,
       kind: 'max',
@@ -204,7 +196,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
     });
   }
 
-  lt(value: BigNumber.Instance, message?: ErrorMessage) {
+  lt(value: string, message?: ErrorMessage) {
     return this._addCheck({
       inclusive: false,
       kind: 'max',
@@ -225,7 +217,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       inclusive: false,
       kind: 'min',
       message: messageToString(message),
-      value: 0,
+      value: '0',
     });
   }
 
@@ -234,7 +226,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       inclusive: false,
       kind: 'max',
       message: messageToString(message),
-      value: 0,
+      value: '0',
     });
   }
 
@@ -243,7 +235,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       inclusive: true,
       kind: 'max',
       message: messageToString(message),
-      value: 0,
+      value: '0',
     });
   }
 
@@ -252,11 +244,11 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       inclusive: true,
       kind: 'min',
       message: messageToString(message),
-      value: 0,
+      value: '0',
     });
   }
 
-  multipleOf(value: BigNumber.Instance, message?: ErrorMessage) {
+  multipleOf(value: string, message?: ErrorMessage) {
     return this._addCheck({
       kind: 'multipleOf',
       message: messageToString(message),

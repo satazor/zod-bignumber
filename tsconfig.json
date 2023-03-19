@@ -7,9 +7,14 @@
       "esnext",
       "dom"
     ],
+    "outDir": "dist",
     "target": "es2016",
+    "declaration": true,
     "removeComments": false,
     "esModuleInterop": true,
+    "module": "commonjs",
+    "declarationMap": false,
+    "sourceMap": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "strict": true,
@@ -24,5 +29,9 @@
   },
   "include": [
     "./src/**/*"
+  ],
+  "exclude": [
+    "./src/**/*.test.ts",
+    "./src/**/__snapshots__",
   ]
 }

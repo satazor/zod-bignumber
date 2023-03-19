@@ -1,18 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {
-  INVALID,
-  z,
-  type ParseInput,
-  type ZodTypeDef,
-  type RawCreateParams,
-  type ProcessedCreateParams,
-  type ZodErrorMap,
-} from 'zod';
+import {type z} from 'zod';
 
 export const processCreateParameters = (
-  parameters: RawCreateParams,
-): ProcessedCreateParams => {
+  parameters: z.RawCreateParams,
+): z.ProcessedCreateParams => {
   if (!parameters) {
     return {};
   }
@@ -29,7 +21,7 @@ export const processCreateParameters = (
     return {errorMap, description};
   }
 
-  const customMap: ZodErrorMap = (iss, ctx) => {
+  const customMap: z.ZodErrorMap = (iss, ctx) => {
     if (iss.code !== 'invalid_type') {
       return {message: ctx.defaultError};
     }
@@ -46,5 +38,5 @@ export const processCreateParameters = (
 
 export type ErrorMessage = string | {message?: string};
 
-export const messageToString = (message: ErrorMessage) =>
+export const messageToString = (message?: ErrorMessage) =>
   typeof message === 'string' ? message : message?.message;
