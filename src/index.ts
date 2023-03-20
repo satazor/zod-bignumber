@@ -50,12 +50,11 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       return z.INVALID;
     }
 
-    let bigNumber;
-
     // Check if data is an invalid big number.
+    // The code below enables `BigNumber.DEBUG` to enable validation.
     // Please note that `Infinity` is still valid at this point and `finite()` should be used.
-    // Moreover, the code below will throw on invalid numbers if `BigNumber.DEBUG` is true, so we do a try-catch.
     const previousDebug = BigNumber.DEBUG;
+    let bigNumber;
 
     BigNumber.DEBUG = true;
 
