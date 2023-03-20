@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/satazor/zod-bignumber/compare/v1.0.4...v1.0.5) (2023-03-20)
+
+
+### Bug Fixes
+
+* coerce ([7342342](https://github.com/satazor/zod-bignumber/commit/734234244659f20961bb36ee166ef6269088af0b))
+
 ## [1.0.4](https://github.com/satazor/zod-bignumber/compare/v1.0.3...v1.0.4) (2023-03-19)
 
 
