@@ -8,7 +8,7 @@ BigNumber type for [`Zod`](https://zod.dev/).
 npm install zod-bignumber
 ```
 
-This project uses [`XO`](https://github.com/xojs/xo) for linting. Install the [plugin of your editor](https://github.com/xojs/xo#editor-plugins) for improved developer experience.
+> ℹ️ In case you are contributing: this project uses [`XO`](https://github.com/xojs/xo) for linting. Install the [plugin of your editor](https://github.com/xojs/xo#editor-plugins) for improved developer experience.
 
 ## Usage
 
