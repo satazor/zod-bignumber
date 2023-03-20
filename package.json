@@ -1,6 +1,6 @@
 {
   "name": "zod-bignumber",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "BigNumber type for Zod",
   "main": "./dist/index.js",
   "files": [
