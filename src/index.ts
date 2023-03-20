@@ -39,12 +39,8 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
   _parse(input: z.ParseInput) {
     const ctx = this._getOrReturnCtx(input);
 
-    if (this._def.coerce) {
-      input.data = String(input.data);
-    }
-
     // Only accept strings, numbers or big numbers.
-    if (typeof input.data !== 'string') {
+    if (!this._def.coerce && typeof input.data !== 'string') {
       z.addIssueToContext(ctx, {
         code: z.ZodIssueCode.invalid_type,
         expected: 'string',
@@ -59,6 +55,10 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
     // Check if data is an invalid big number.
     // Please note that `Infinity` is still valid at this point and `finite()` should be used.
     // Moreover, the code below will throw on invalid numbers if `BigNumber.DEBUG` is true, so we do a try-catch.
+    const previousDebug = BigNumber.DEBUG;
+
+    BigNumber.DEBUG = true;
+
     try {
       bigNumber = new BigNumber(input.data);
     } catch (error: unknown) {
@@ -68,7 +68,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       ) {
         z.addIssueToContext(ctx, {
           code: z.ZodIssueCode.invalid_type,
-          message: 'Not a valid big number',
+          message: error.message.replace(/^\[BigNumber Error]\s*/, ''),
           expected: 'number',
           received: 'nan',
         });
@@ -77,17 +77,8 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
       }
 
       throw error;
-    }
-
-    if (bigNumber.isNaN()) {
-      z.addIssueToContext(ctx, {
-        code: z.ZodIssueCode.invalid_type,
-        message: 'Not a valid big number',
-        expected: 'number',
-        received: 'nan',
-      });
-
-      return z.INVALID;
+    } finally {
+      BigNumber.DEBUG = previousDebug;
     }
 
     // Process checks in order.

@@ -36,7 +36,7 @@ it('should error if input is not a valid number', () => {
       "error": [ZodError: [
       {
         "code": "invalid_type",
-        "message": "Not a valid big number",
+        "message": "Not a number: aaa",
         "expected": "number",
         "received": "nan",
         "path": []
@@ -47,41 +47,21 @@ it('should error if input is not a valid number', () => {
   `);
 });
 
-it('should error if input is not a valid number (DEBUG enabled)', () => {
-  BigNumber.DEBUG = true;
+it('should properly restore DEBUG value', () => {
+  BigNumber.DEBUG = 'foo';
 
-  const result = zBigNumber().safeParse('aaa');
+  zBigNumber().safeParse('aaa');
 
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "code": "invalid_type",
-        "message": "Not a valid big number",
-        "expected": "number",
-        "received": "nan",
-        "path": []
-      }
-    ]],
-      "success": false,
-    }
-  `);
+  expect(BigNumber.DEBUG).toBe('foo');
+
+  BigNumber.DEBUG = null;
+
+  zBigNumber().safeParse('aaa');
+
+  expect(BigNumber.DEBUG).toBe(null);
 });
 
 it('should work correctly for a valid number', () => {
-  const result = zBigNumber().safeParse('2.91');
-
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "data": "2.91",
-      "success": true,
-    }
-  `);
-});
-
-it('should work correctly for a valid number (DEBUG enabled)', () => {
-  BigNumber.DEBUG = true;
-
   const result = zBigNumber().safeParse('2.91');
 
   expect(result).toMatchInlineSnapshot(`
@@ -640,6 +620,26 @@ describe('params', () => {
         {
           "data": "2",
           "success": true,
+        }
+      `);
+    });
+
+    it('should error if unable to coerce', () => {
+      // eslint-disable-next-line unicorn/numeric-separators-style
+      const result = zBigNumber({coerce: true}).safeParse(823456789123456.3);
+
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "error": [ZodError: [
+          {
+            "code": "invalid_type",
+            "message": "Number primitive has more than 15 significant digits: 823456789123456.2",
+            "expected": "number",
+            "received": "nan",
+            "path": []
+          }
+        ]],
+          "success": false,
         }
       `);
     });
