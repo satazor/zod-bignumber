@@ -43,7 +43,7 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
     if (!this._def.coerce && typeof input.data !== 'string') {
       z.addIssueToContext(ctx, {
         code: z.ZodIssueCode.invalid_type,
-        expected: 'string',
+        expected: z.ZodParsedType.string,
         received: z.getParsedType(input.data),
       });
 
@@ -68,8 +68,8 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
         z.addIssueToContext(ctx, {
           code: z.ZodIssueCode.invalid_type,
           message: error.message.replace(/^\[BigNumber Error]\s*/, ''),
-          expected: 'number',
-          received: 'nan',
+          expected: z.ZodParsedType.number,
+          received: z.ZodParsedType.nan,
         });
 
         return z.INVALID;
@@ -89,9 +89,9 @@ export class ZodBigNumber extends z.ZodType<string, ZodBigNumberDef> {
           if (!bigNumber.isInteger()) {
             z.addIssueToContext(ctx, {
               code: z.ZodIssueCode.invalid_type,
-              expected: 'integer',
+              expected: z.ZodParsedType.integer,
               message: check.message,
-              received: 'float',
+              received: z.ZodParsedType.float,
             });
             status.dirty();
           }
